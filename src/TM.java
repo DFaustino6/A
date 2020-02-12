@@ -13,7 +13,7 @@ public class TM {
 		this.s=s;
 		initialiazeTable();
 		tokens = new ArrayList<String>();
-		tokenizer();
+		//tokenizer();
 		tokenClassifier();
 	}
 	/*
@@ -53,7 +53,7 @@ public class TM {
 			token="";
 		}
 		
-	}*/
+	}
 	
 	private void tokenizer() {
 		Iterator<String> itr=s.iterator();
@@ -66,7 +66,7 @@ public class TM {
 			s = (String) itr.next();
 			for(int i=0;i<s.length();i++) {
 				char c = s.charAt(i);
-				/*
+				*//*
 				 * Acontece que, sempre que encontramos um character especial exceto '_' este nao consideramos especial, podemos terminar o token
 				 * sendo entao que 1===1 sao 3 tokens, '1', '===' e '1' outra vez.
 				 * percorremos a string, sempre que encontrarmos um character nao especial, adicionamos ao token. Assim que encontramos um character
@@ -83,7 +83,11 @@ public class TM {
 				 * token+=1, \found a special\, insert(token),token="",specialToken+='*',specialToken+='=' \found a non special\, insert(tokenSpecial),tokenSpeciak="",
 				 * token+=B, \found end of line\, insert(token), \finished\
 				 * PS if 
-				 */
+				 * 
+				 * A+++B
+				 * token+=A, \found special\, insert(token), token="", tokenSpecial+='+',matches="plus", insert(tokenSpecial), tokenSpecial+='+',
+				 * matches="plus", insert(tokenSpecial)
+				 *//*
 				if(isSpecial(c)) {
 					if(tokenSpecial.equals("")) {
 						tokens.add(token);
@@ -110,7 +114,6 @@ public class TM {
 					if(c!=' ')	
 						token+=c;;
 				}
-				
 			}
 			tokens.add(token);
 			token="";
@@ -119,7 +122,8 @@ public class TM {
 			
 		}
 		
-	}
+	}*/
+	
 	private boolean isSpecial(char c) { //operadores e espacos sao char especiais
 		if(c=='_' || c=='.' || isSeperator(c))
 			return false;
@@ -140,13 +144,14 @@ public class TM {
 		tokensMap.put(":=","assign");
 		tokensMap.put("+","plus");
 		tokensMap.put("-","minus");
-		tokensMap.put("*","time");
+		tokensMap.put("*","times");
 		tokensMap.put("/","div");
 		tokensMap.put("(","lparen");
 		tokensMap.put(")","rparen");
 		tokensMap.put("read","keyword");
 		tokensMap.put("write","keyword");
-		//tokensMap.put("===","equalsTo");
+		/*tokensMap.put("==","isEquals");
+		tokensMap.put("===","isEqualsAndSameType");*/
 	}
 	
 	@SuppressWarnings("unused")
