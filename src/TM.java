@@ -23,7 +23,6 @@ public class TM {
 		while(itr.hasNext()) {
 			String line=itr.next();
 			for(int i=0;i<line.length();i++) {
-				
 				char c=line.charAt(i);
 				if(tokensMap.containsKey(Character.toString(c))) {
 					tokens.add(Character.toString(c));
@@ -40,12 +39,16 @@ public class TM {
 				}
 				else if(isNumeric(Character.toString(c))) {
 					token+=c;
+					if(i+1<line.length() && !isNumeric(Character.toString(line.charAt(i+1))))
+							tokens.add(token);
 				}
-				else {
-					token+=c;
-					
+				else if(c==' '){	
+					tokens.add(token);
+					token="";			
 				}
-					
+				else{
+					token+=c;	
+				}	
 			}
 				
 		}
