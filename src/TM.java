@@ -90,8 +90,12 @@ public class TM {
 	public String toString() {
 		String res = "";
 		Iterator<String> itr = tokenResult.iterator();
-		while(itr.hasNext())
-			res+=itr.next()+"\r\n";
+		while(itr.hasNext()) {
+			if(!itr.hasNext())
+				res+=itr.next();
+			else
+				res+=itr.next()+"\r\n";
+		}	
 		return res;
 	}
 	
