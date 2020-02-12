@@ -18,44 +18,42 @@ public class TM {
 	}
 	
 	private void tokenizer() {
-		Iterator<String> itr= s.iterator();
-		String token="";
-		while(itr.hasNext()) {
-			String line=itr.next();
-			int lineLen = line.length();
-			for(int i=0;i<lineLen;i++) {
-				char c=line.charAt(i);
-				
-				if(tokensMap.containsKey(Character.toString(c))) {
-					tokens.add(Character.toString(c));
-					token="";
-				}
-				else if(c==':' && line.charAt(i+1)=='=') {
-					tokens.add(":=");
-					i++;
-					token="";
-				}
-				else if(c=='.') //se encontra um ponto, mesmo que n tenha nada antes, e porque muito possivelmente e um numero a seguir
-					token+=c;
-				else if(Character.isDigit(c)) { //se comecar por um numero...
-					token+=c;
-					if(i+1<lineLen && (!Character.isDigit(line.charAt(i+1)) && line.charAt(i+1)!='.')) { 
-						tokens.add(token);
-						token="";
-					}
-				} else if(Character.isAlphabetic(c)){
-					token+=c;
-					while(i+1<lineLen && (Character.isAlphabetic(line.charAt(i+1)) || Character.isDigit(line.charAt(i+1))))
-						token+=line.charAt(++i);
-					tokens.add(token);
-					token="";
-				}	
-			}
-			tokens.add(token);
-			token="";
-				
-		}
-			
+        Iterator<String> itr= s.iterator();
+        String token="";
+        while(itr.hasNext()) {
+            String line=itr.next();
+            int lineLen = line.length();
+            for(int i=0;i<lineLen;i++) {
+                char c=line.charAt(i);
+                
+                if(tokensMap.containsKey(Character.toString(c))) {
+                    tokens.add(Character.toString(c));
+                    token="";
+                }
+                else if(c==':' && line.charAt(i+1)=='=') {
+                    tokens.add(":=");
+                    i++;
+                    token="";
+                }
+                else if(c=='.') //se encontra um ponto, mesmo que n tenha nada antes, e porque muito possivelmente e um numero a seguir
+                    token+=c;
+                else if(Character.isDigit(c)) { //se comecar por um numero...
+                    token+=c;
+                    if(i+1<lineLen && (!Character.isDigit(line.charAt(i+1)) && line.charAt(i+1)!='.')) { 
+                        tokens.add(token);
+                        token="";
+                    }
+                } else if(Character.isAlphabetic(c)){
+                    token+=c;
+                    if(i+1<lineLen && (!Character.isDigit(line.charAt(i+1)) && !Character.isAlphabetic(line.charAt(i+1)))){
+                        tokens.add(token);
+                        token="";
+                    }
+                }    
+            }
+            tokens.add(token);
+            token="";    
+		}	
 	}
 
 	
