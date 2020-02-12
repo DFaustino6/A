@@ -16,7 +16,7 @@ public class TM {
 		tokenizer();
 		tokenClassifier();
 	}
-	
+	/*
 	private void tokenizer() {
 		
 		Iterator<String> itr=s.iterator();
@@ -30,8 +30,8 @@ public class TM {
 				
 				char c = s.charAt(i);
 				
-				
-				if(c == ':' || c==' ' || tokensMap.containsKey(token)) { //handles spaces, compound operators (:=,etc)
+				if(isSpecial(c) )
+				if( isSpecial(c) || tokensMap.containsKey(token)) { //handles spaces, compound operators (:=,etc)
 					if(!token.equals(""))
 						tokens.add(token);
 					token="";
@@ -53,6 +53,64 @@ public class TM {
 			token="";
 		}
 		
+	}*/
+	
+	private void tokenizer() {
+		Iterator<String> itr=s.iterator();
+		String token = "";
+		String tokenSpecial = "";
+		String s = "";
+		
+		while(itr.hasNext()) {
+			
+			s = (String) itr.next();
+			for(int i=0;i<s.length();i++) {
+				char c = s.charAt(i);
+				/*
+				 * Acontece que, sempre que encontramos um character especial exceto '_' este nao consideramos especial, podemos terminar o token
+				 * sendo entao que 1===1 sao 3 tokens, '1', '===' e '1' outra vez.
+				 * percorremos a string, sempre que encontrarmos um character nao especial, adicionamos ao token. Assim que encontramos um character
+				 * especial, terminamos o token anterior, desde que este nao seja composto apenas de chars especiais ( se tivermos '==' seguido de '=')
+				 * adicionamos ao '==' em vez, isto serve para tratar de operadors com varios simbolos como e caso do assign, equals, notEquals, etc.
+				 * Sempre que comecamos um token de especiais, inserimos o token de nao especiais no array de tokens e adicionamos o char especial a um token
+				 * de especiais
+				 * So: se tivermos um token com '1' e de seguida encontrarmos '=', guardamos o '1' e adicionamos acrescentamos '=' ao pre-token
+				 * enquanto forem chars especiais adicionamos a esse pre-token, quando mudarem para nao especiais, adicionamos o token especial a lista de tokens
+				 * e recomecamos o trabalho
+				 * os passos para \READ A 1*=B\ seriam:
+				 * token+=R, token+=E, token+=A, token+=D, \found a special\, insert(token),token="", special==' ' => ignore,
+				 * token+=A, \found a special\, insert(token),token="", special==' ' => ignore,
+				 * token+=1, \found a special\, insert(token),token="",specialToken+='*',specialToken+='=' \found a non special\, insert(tokenSpecial),tokenSpeciak="",
+				 * token+=B, \found end of line\, insert(token), \finished\
+				 */
+				if(isSpecial(c)) {
+					if(tokenSpecial.equals("")) {
+						tokens.add(token);
+						token="";
+					}
+					if(c!=' ')	
+						tokenSpecial+=c;
+					
+				} else {
+					if(!tokenSpecial.equals("")) {
+						tokens.add(tokenSpecial);
+						tokenSpecial="";
+					}
+					if(c!=' ')	
+						token+=c;;
+				}
+				
+			}
+			tokens.add(token);
+			token="";
+			
+		}
+		
+	}
+	private boolean isSpecial(char c) { //operadores e espacos sao char especiais
+		if(c=='_')
+			return false;
+		return !(isNumeric(Character.toString(c)) || isLetter(c));
 	}
 	
 	private String tokenTypeFormat(String token, String type) {
@@ -69,7 +127,7 @@ public class TM {
 		tokensMap.put(")","rparen");
 		tokensMap.put("read","keyword");
 		tokensMap.put("write","keyword");
-		//tokensMap.put("==","keyword");
+		//tokensMap.put("===","equalsTo");
 	}
 	
 	@SuppressWarnings("unused")
@@ -118,7 +176,5 @@ public class TM {
 		return Character.isLetter(c);
 	}
 	
-	private boolean isSpecial(char c) {
-		return !(isNumeric(Character.toString(c)) || isLetter(c));
-	}
+
 }
