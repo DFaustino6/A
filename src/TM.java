@@ -18,53 +18,44 @@ public class TM {
 	}
 	
 	private void tokenizer() {
-		Iterator<String> itr= s.iterator();
-		String token="";
-		while(itr.hasNext()) {
-			String line=itr.next();
-			for(int i=0;i<line.length();i++) {
-				char c=line.charAt(i);
-				if(tokensMap.containsKey(Character.toString(c))) {
-					tokens.add(Character.toString(c));
-					token="";
-				}
-				else if(c==':' && line.charAt(i+1)=='=') {
-					tokens.add(":=");
-					i++;
-					token="";
-				}
-				else if(c=='.') {
-					token="";
-					token+=c;
-				}
-				else if(isNumeric(Character.toString(c))) {
-					token+=c;
-					if(i+1<line.length() && !isNumeric(Character.toString(line.charAt(i+1))))
-							tokens.add(token);
-				}
-				else if(c==' ' || tokensMap.containsKey(Character.toString(c)) ||  c==':' ){	
-					tokens.add(token);
-					token="";			
-				}
-				else{
-					token+=c;	
-				}	
-			}
-				
-		}
+        Iterator<String> itr= s.iterator();
+        String token="";
+        while(itr.hasNext()) {
+
+            String line=itr.next();
+			int lineLen = line.length();
 			
-	}
-	
-	private boolean isSpecial(char c) { //operadores e espacos sao char especiais
-		if(c=='_' || c=='.' || isSeperator(c))
-			return false;
-		return !(isNumeric(Character.toString(c)) || isLetter(c));
-	}
-	
-	private boolean isSeperator(char c) {
-		if(c=='(' || c==')')
-			return true;
-		return false;
+            for(int i=0;i<lineLen;i++) {
+                char c=line.charAt(i);
+                
+                if(tokensMap.containsKey(Character.toString(c))) {
+                    tokens.add(Character.toString(c));
+                    token="";
+                }
+                else if(c==':' && line.charAt(i+1)=='=') {
+                    tokens.add(":=");
+                    i++;
+                    token="";
+                }
+                else if(c=='.') //se encontra um ponto, mesmo que n tenha nada antes, e porque muito possivelmente e um numero a seguir
+                    token+=c;
+                else if(Character.isDigit(c)) { //se comecar por um numero...
+                    token+=c;
+                    if(i+1<lineLen && (!Character.isDigit(line.charAt(i+1)) && line.charAt(i+1)!='.')) { 
+                        tokens.add(token);
+                        token="";
+                    }
+                } else if(Character.isAlphabetic(c)){
+                    token+=c;
+                    if(i+1<lineLen && (!Character.isDigit(line.charAt(i+1)) && !Character.isAlphabetic(line.charAt(i+1)))){
+                        tokens.add(token);
+                        token="";
+                    }
+                }    
+            }
+            tokens.add(token);
+            token="";   
+        }
 	}
 	
 	private String tokenTypeFormat(String token, String type) {
@@ -127,9 +118,6 @@ public class TM {
 		}
 	}
 
-	private boolean isLetter(Character c) {
-		return Character.isLetter(c);
-	}
 	
 
 }
