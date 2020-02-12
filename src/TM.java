@@ -91,10 +91,11 @@ public class TM {
 		String res = "";
 		Iterator<String> itr = tokenResult.iterator();
 		while(itr.hasNext()) {
+			String s = itr.next();
 			if(!itr.hasNext())
-				res+=itr.next();
+				res+=s;
 			else
-				res+=itr.next()+"\r\n";
+				res+=s+"\r\n";
 		}	
 		return res;
 	}
