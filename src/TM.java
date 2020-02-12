@@ -35,15 +35,11 @@ public class TM {
 					i++;
 					token="";
 				}
-				else if(c=='.') { //se encontra um ponto, mesmo que n tenha nada antes, e porque muito possivelmente e um numero a seguir
+				else if(c=='.') //se encontra um ponto, mesmo que n tenha nada antes, e porque muito possivelmente e um numero a seguir
 					token+=c;
-				}
 				else if(Character.isDigit(c)) { //se comecar por um numero...
 					token+=c;
-					while(i+1<lineLen && Character.isDigit(line.charAt(i+1)))
-						token+=line.charAt(++i);
-					
-					if(i+1<lineLen && line.charAt(i+1)!='.') { 
+					if(i+1<lineLen && (!Character.isDigit(line.charAt(i+1)) && line.charAt(i+1)!='.')) { 
 						tokens.add(token);
 						token="";
 					}
