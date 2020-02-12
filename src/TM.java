@@ -45,10 +45,10 @@ public class TM {
 					}
 				} else if(Character.isAlphabetic(c)){
 					token+=c;
-					while(i+1<lineLen && (Character.isAlphabetic(line.charAt(i+1)) || Character.isDigit(line.charAt(i+1))))
-						token+=line.charAt(++i);
-					tokens.add(token);
-					token="";
+					if(i+1<lineLen && (!Character.isDigit(line.charAt(i+1)) && !Character.isAlphabetic(line.charAt(i+1)))){
+						tokens.add(token);
+						token="";
+					}
 				}	
 			}
 			tokens.add(token);
