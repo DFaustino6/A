@@ -9,7 +9,7 @@ public class Client {
 		 while(sc.hasNextLine())
 			 lines.add(sc.nextLine());
 		TM tm = new TM(lines);
-		System.out.println(tm.showTokens());
+		System.out.println(tm.toString());
 	}
 
 }

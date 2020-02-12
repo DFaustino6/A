@@ -8,13 +8,15 @@ public class TM {
 	private Collection<String> s;
 	private Hashtable<String,String> tokensMap = new Hashtable<String,String>();
 	private ArrayList<String> tokens;
-	private ArrayList<String> tokenResult;
+	private ArrayList<String> tokenResult= new ArrayList<String>();
+	private Boolean typeDouble = false; //true is integer, false is string
 	
 	public TM(Collection<String> s) {
 		this.s=s;
 		initialiazeTable();
 		tokens = new ArrayList<String>();
 		tokenizer();
+		tokenClassifier();
 	}
 	
 	private void tokenizer() {
@@ -29,12 +31,25 @@ public class TM {
 			for(int i=0;i<s.length();i++) {
 				
 				char c = s.charAt(i);
-				if(c == ':' || tokensMap.containsKey(Character.toString(c)) || tokensMap.containsKey(token) || c==' ') {
+				
+				
+				if(c == ':' || c==' ' || tokensMap.containsKey(token)) { //handles spaces, compound operators (:=,etc)
 					if(!token.equals(""))
 						tokens.add(token);
 					token="";
-				} if(c!=' ')	
+					
+				} else if(tokensMap.containsKey(Character.toString(c))) { //simple operators (+,-,/,%,*,!,^,etc)
+					
+					if(!token.equals(""))
+						tokens.add(token);
+					tokens.add(Character.toString(c));
+					i++;
+					token="";
+				}
+				
+				if(c!=' ')	
 					token+=s.charAt(i);
+				
 			} //end for
 			tokens.add(token);
 			token="";
@@ -56,14 +71,57 @@ public class TM {
 		tokensMap.put(")","rparen");
 		tokensMap.put("read","keyword");
 		tokensMap.put("write","keyword");
+		//tokensMap.put("==","keyword");
 	}
 	
-	public String showTokens() {
+	@SuppressWarnings("unused")
+	private String showTokens() {
 		String res = "";
 		Iterator<String> itr = tokens.iterator();
 		while(itr.hasNext())
 			res+=itr.next()+"\r\n";
 		return res;
 		
+	}
+	
+	@Override
+	public String toString() {
+		String res = "";
+		Iterator<String> itr = tokenResult.iterator();
+		while(itr.hasNext())
+			res+=itr.next()+"\r\n";
+		return res;
+	}
+	
+	private void tokenClassifier() {
+		Iterator<String> itr = tokens.iterator();
+		String s="";
+		while(itr.hasNext()) {
+			s= itr.next();
+			if(tokensMap.containsKey(s))
+				tokenResult.add(tokenTypeFormat(s,tokensMap.get(s)));
+			else if(isNumeric(s))
+				tokenResult.add(tokenTypeFormat(s,"number"));
+			else if(!s.equals(""))
+				tokenResult.add(tokenTypeFormat(s,"id"));		
+		}
+	}
+	
+	private boolean isNumeric(String n){
+		try {
+			Double.parseDouble(n);
+			typeDouble=true;
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
+	private boolean isLetter(Character c) {
+		return Character.isLetter(c);
+	}
+	
+	private boolean isSpecial(char c) {
+		return !(isNumeric(Character.toString(c)) || isLetter(c));
 	}
 }
