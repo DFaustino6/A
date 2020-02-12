@@ -42,7 +42,7 @@ public class TM {
 					if(i+1<line.length() && !isNumeric(Character.toString(line.charAt(i+1))))
 							tokens.add(token);
 				}
-				else if(c==' '){	
+				else if(c==' ' || tokensMap.containsKey(Character.toString(c)) ||  c==':' ){	
 					tokens.add(token);
 					token="";			
 				}
