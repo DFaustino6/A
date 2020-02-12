@@ -13,116 +13,44 @@ public class TM {
 		this.s=s;
 		initialiazeTable();
 		tokens = new ArrayList<String>();
-		//tokenizer();
+		tokenizer();
 		tokenClassifier();
-	}
-	/*
-	private void tokenizer() {
-		
-		Iterator<String> itr=s.iterator();
-		String token = "";
-		String s = "";
-		
-		while(itr.hasNext()) {
-			
-			s = (String) itr.next();
-			for(int i=0;i<s.length();i++) {
-				
-				char c = s.charAt(i);
-				
-				if(isSpecial(c) )
-				if( isSpecial(c) || tokensMap.containsKey(token)) { //handles spaces, compound operators (:=,etc)
-					if(!token.equals(""))
-						tokens.add(token);
-					token="";
-					
-				} else if(tokensMap.containsKey(Character.toString(c))) { //simple operators (+,-,/,%,*,!,^,etc)
-					
-					if(!token.equals(""))
-						tokens.add(token);
-					tokens.add(Character.toString(c));
-					i++;
-					token="";
-				}
-				
-				if(c!=' ')	
-					token+=s.charAt(i);
-				
-			} //end for
-			tokens.add(token);
-			token="";
-		}
-		
 	}
 	
 	private void tokenizer() {
-		Iterator<String> itr=s.iterator();
-		String token = "";
-		String tokenSpecial = "";
-		String s = "";
-		
+		Iterator<String> itr= s.iterator();
+		String token="";
 		while(itr.hasNext()) {
-			
-			s = (String) itr.next();
-			for(int i=0;i<s.length();i++) {
-				char c = s.charAt(i);
-				*//*
-				 * Acontece que, sempre que encontramos um character especial exceto '_' este nao consideramos especial, podemos terminar o token
-				 * sendo entao que 1===1 sao 3 tokens, '1', '===' e '1' outra vez.
-				 * percorremos a string, sempre que encontrarmos um character nao especial, adicionamos ao token. Assim que encontramos um character
-				 * especial, terminamos o token anterior, desde que este nao seja composto apenas de chars especiais ( se tivermos '==' seguido de '=')
-				 * adicionamos ao '==' em vez, isto serve para tratar de operadors com varios simbolos como e caso do assign, equals, notEquals, etc.
-				 * Sempre que comecamos um token de especiais, inserimos o token de nao especiais no array de tokens e adicionamos o char especial a um token
-				 * de especiais
-				 * So: se tivermos um token com '1' e de seguida encontrarmos '=', guardamos o '1' e adicionamos acrescentamos '=' ao pre-token
-				 * enquanto forem chars especiais adicionamos a esse pre-token, quando mudarem para nao especiais, adicionamos o token especial a lista de tokens
-				 * e recomecamos o trabalho
-				 * os passos para \READ A 1*=B\ seriam:
-				 * token+=R, token+=E, token+=A, token+=D, \found a special\, insert(token),token="", special==' ' => ignore,
-				 * token+=A, \found a special\, insert(token),token="", special==' ' => ignore,
-				 * token+=1, \found a special\, insert(token),token="",specialToken+='*',specialToken+='=' \found a non special\, insert(tokenSpecial),tokenSpeciak="",
-				 * token+=B, \found end of line\, insert(token), \finished\
-				 * PS if 
-				 * 
-				 * A+++B
-				 * token+=A, \found special\, insert(token), token="", tokenSpecial+='+',matches="plus", insert(tokenSpecial), tokenSpecial+='+',
-				 * matches="plus", insert(tokenSpecial)
-				 *//*
-				if(isSpecial(c)) {
-					if(tokenSpecial.equals("")) {
-						tokens.add(token);
-						token="";
-					}
-					if(c!=' ')	
-						tokenSpecial+=c;
-					
-				} else if(isSeperator(c)){
-					if(!tokenSpecial.equals("")) {
-						tokens.add(tokenSpecial);
-						tokenSpecial="";
-					}
-					if(!token.equals("")) {
-						tokens.add(token);
-						token="";
-					}
-					tokens.add(Character.toString(c)); //if we find a seperators {'(' or ')'} then just add what we had, and add the seperator
-				}else {
-					if(!tokenSpecial.equals("")) {
-						tokens.add(tokenSpecial);
-						tokenSpecial="";
-					}
-					if(c!=' ')	
-						token+=c;;
+			String line=itr.next();
+			for(int i=0;i<line.length();i++) {
+				
+				char c=line.charAt(i);
+				if(tokensMap.containsKey(Character.toString(c))) {
+					tokens.add(Character.toString(c));
+					token="";
 				}
+				else if(c==':' && line.charAt(i+1)=='=') {
+					tokens.add(":=");
+					i++;
+					token="";
+				}
+				else if(c=='.') {
+					token="";
+					token+=c;
+				}
+				else if(isNumeric(Character.toString(c))) {
+					token+=c;
+				}
+				else {
+					token+=c;
+					
+				}
+					
 			}
-			tokens.add(token);
-			token="";
-			tokens.add(tokenSpecial);
-			tokenSpecial="";
-			
+				
 		}
-		
-	}*/
+			
+	}
 	
 	private boolean isSpecial(char c) { //operadores e espacos sao char especiais
 		if(c=='_' || c=='.' || isSeperator(c))
