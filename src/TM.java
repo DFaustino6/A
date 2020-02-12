@@ -2,47 +2,44 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 public class TM {
 	private Collection<String> s;
 	private Hashtable<String,String> tokensMap = new Hashtable<String,String>();
 	private ArrayList<String> tokens;
-	private ArrayList<String> tokenIdentified;
+	private ArrayList<String> tokenResult;
 	
 	public TM(Collection<String> s) {
 		this.s=s;
 		initialiazeTable();
 		tokens = new ArrayList<String>();
-		getToken();
+		tokenizer();
 	}
 	
-	private String getToken() {
+	private void tokenizer() {
 		
 		Iterator<String> itr=s.iterator();
 		String token = "";
+		String s = "";
 		
-		/*while(itr.hasNext()) {
+		while(itr.hasNext()) {
 			
-			String s = (String) itr.next();*/
-			String s = "aaa bbb:=B*C read A read B sum := A + B*99 write sum/2";
-			
+			s = (String) itr.next();
 			for(int i=0;i<s.length();i++) {
+				
 				char c = s.charAt(i);
 				if(c == ':' || tokensMap.containsKey(Character.toString(c)) || tokensMap.containsKey(token) || c==' ') {
-					System.out.println("Token: <"+token+">");
-					tokens.add(token);
+					if(!token.equals(""))
+						tokens.add(token);
 					token="";
-				}
-					
-				if(c!=' ')	
+				} if(c!=' ')	
 					token+=s.charAt(i);
-			}
-		//}
-		tokens.add(token);
-		itr = tokens.iterator();
-		while(itr.hasNext())
-			System.out.println(itr.next());
-		return null;
+			} //end for
+			tokens.add(token);
+			token="";
+		}
+		
 	}
 	
 	private String tokenTypeFormat(String token, String type) {
@@ -55,9 +52,18 @@ public class TM {
 		tokensMap.put("-","minus");
 		tokensMap.put("*","time");
 		tokensMap.put("/","div");
-		tokensMap.put("lparen","(");
-		tokensMap.put("rparen",")");
+		tokensMap.put("(","lparen");
+		tokensMap.put(")","rparen");
 		tokensMap.put("read","keyword");
 		tokensMap.put("write","keyword");
+	}
+	
+	public String showTokens() {
+		String res = "";
+		Iterator<String> itr = tokens.iterator();
+		while(itr.hasNext())
+			res+=itr.next()+"\r\n";
+		return res;
+		
 	}
 }
