@@ -8,7 +8,7 @@ public class TM {
 	private Hashtable<String,String> tokensMap = new Hashtable<String,String>();
 	private ArrayList<String> tokens;
 	private ArrayList<String> tokenResult= new ArrayList<String>();
-	//did it work?
+	
 	public TM(Collection<String> s) {
 		this.s=s;
 		initialiazeTable();
