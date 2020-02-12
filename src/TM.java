@@ -21,8 +21,10 @@ public class TM {
         Iterator<String> itr= s.iterator();
         String token="";
         while(itr.hasNext()) {
+
             String line=itr.next();
-            int lineLen = line.length();
+			int lineLen = line.length();
+			
             for(int i=0;i<lineLen;i++) {
                 char c=line.charAt(i);
                 
@@ -52,10 +54,9 @@ public class TM {
                 }    
             }
             tokens.add(token);
-            token="";    
-		}	
+            token="";   
+        }
 	}
-
 	
 	private String tokenTypeFormat(String token, String type) {
 		return "<"+type+","+"\""+token+"\""+">";
