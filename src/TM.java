@@ -82,6 +82,7 @@ public class TM {
 				 * token+=A, \found a special\, insert(token),token="", special==' ' => ignore,
 				 * token+=1, \found a special\, insert(token),token="",specialToken+='*',specialToken+='=' \found a non special\, insert(tokenSpecial),tokenSpeciak="",
 				 * token+=B, \found end of line\, insert(token), \finished\
+				 * PS if 
 				 */
 				if(isSpecial(c)) {
 					if(tokenSpecial.equals("")) {
@@ -91,7 +92,17 @@ public class TM {
 					if(c!=' ')	
 						tokenSpecial+=c;
 					
-				} else {
+				} else if(isSeperator(c)){
+					if(!tokenSpecial.equals("")) {
+						tokens.add(tokenSpecial);
+						tokenSpecial="";
+					}
+					if(!token.equals("")) {
+						tokens.add(token);
+						token="";
+					}
+					tokens.add(Character.toString(c)); //if we find a seperators {'(' or ')'} then just add what we had, and add the seperator
+				}else {
 					if(!tokenSpecial.equals("")) {
 						tokens.add(tokenSpecial);
 						tokenSpecial="";
@@ -103,14 +114,22 @@ public class TM {
 			}
 			tokens.add(token);
 			token="";
+			tokens.add(tokenSpecial);
+			tokenSpecial="";
 			
 		}
 		
 	}
 	private boolean isSpecial(char c) { //operadores e espacos sao char especiais
-		if(c=='_')
+		if(c=='_' || c=='.' || isSeperator(c))
 			return false;
 		return !(isNumeric(Character.toString(c)) || isLetter(c));
+	}
+	
+	private boolean isSeperator(char c) {
+		if(c=='(' || c==')')
+			return true;
+		return false;
 	}
 	
 	private String tokenTypeFormat(String token, String type) {
