@@ -2,14 +2,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 
 public class TM {
 	private Collection<String> s;
 	private Hashtable<String,String> tokensMap = new Hashtable<String,String>();
 	private ArrayList<String> tokens;
 	private ArrayList<String> tokenResult= new ArrayList<String>();
-	private Boolean typeDouble = false; //true is integer, false is string
 	
 	public TM(Collection<String> s) {
 		this.s=s;
@@ -110,7 +108,6 @@ public class TM {
 	private boolean isNumeric(String n){
 		try {
 			Double.parseDouble(n);
-			typeDouble=true;
 			return true;
 		} catch (NumberFormatException e) {
 			return false;

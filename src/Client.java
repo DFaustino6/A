@@ -10,6 +10,7 @@ public class Client {
 			 lines.add(sc.nextLine());
 		TM tm = new TM(lines);
 		System.out.println(tm.toString());
+		sc.close();
 	}
 
 }
