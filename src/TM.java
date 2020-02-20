@@ -72,6 +72,7 @@ public class TM {
 		tokensMap.put(")","rparen");
 		tokensMap.put("read","keyword");
 		tokensMap.put("write","keyword");
+		tokensMap.put("if", "keyword");
 		/*tokensMap.put("==","isEquals");
 		tokensMap.put("===","isEqualsAndSameType");*/
 	}
@@ -109,8 +110,9 @@ public class TM {
 				tokenResult.add(tokenTypeFormat(s,tokensMap.get(s)));
 			else if(isNumeric(s))
 				tokenResult.add(tokenTypeFormat(s,"number"));
-			else if(!s.equals(""))
-				tokenResult.add(tokenTypeFormat(s,"id"));		
+			else if(!s.equals("") && Character.isAlphabetic(s.charAt(0)))
+				tokenResult.add(tokenTypeFormat(s,"id"));	
+			else tokenResult.add(tokenTypeFormat(s,"Unclassified: possible sintax error"));		
 		}
 	}
 	
